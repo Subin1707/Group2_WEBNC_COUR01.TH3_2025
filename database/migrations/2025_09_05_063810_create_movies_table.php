@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->string('genre', 100);
-            $table->date('release_date');
+            $table->string('title');              // Tên phim
+            $table->text('description')->nullable(); // Mô tả
+            $table->string('genre')->nullable();  // Thể loại
+            $table->integer('duration');          // Thời lượng (phút)
+            $table->date('release_date')->nullable(); // Ngày khởi chiếu
+            $table->string('poster')->nullable(); // Ảnh poster
             $table->timestamps();
         });
     }

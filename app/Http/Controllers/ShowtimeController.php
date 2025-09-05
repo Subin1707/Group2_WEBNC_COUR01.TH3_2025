@@ -2,63 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Showtime;
+use App\Models\Movie;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class ShowtimeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $showtimes = Showtime::with(['movie', 'room'])->get();
+        return view('showtimes.index', compact('showtimes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $movies = Movie::all();
+        $rooms = Room::all();
+        return view('showtimes.create', compact('movies', 'rooms'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'movie_id' => 'required|exists:movies,id',
+            'room_id' => 'required|exists:rooms,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        Showtime::create($request->all());
+
+        return redirect()->route('showtimes.index')->with('success', 'Thêm suất chiếu thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Showtime $showtime)
     {
-        //
+        $movies = Movie::all();
+        $rooms = Room::all();
+        return view('showtimes.edit', compact('showtime', 'movies', 'rooms'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Showtime $showtime)
     {
-        //
+        $request->validate([
+            'movie_id' => 'required|exists:movies,id',
+            'room_id' => 'required|exists:rooms,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $showtime->update($request->all());
+
+        return redirect()->route('showtimes.index')->with('success', 'Cập nhật suất chiếu thành công!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Showtime $showtime)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $showtime->delete();
+        return redirect()->route('showtimes.index')->with('success', 'Xóa suất chiếu thành công!');
     }
 }

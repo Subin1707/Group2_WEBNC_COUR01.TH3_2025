@@ -9,8 +9,18 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    {{-- Form tìm kiếm --}}
+    <form action="{{ route('rooms.index') }}" method="GET" class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Tìm phòng hoặc rạp...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
     {{-- Nút thêm phòng chiếu --}}
-    <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-3">+ Thêm phòng chiếu</a>
+    <a href="{{ route('rooms.create') }}" class="btn btn-success mb-3">+ Thêm phòng chiếu</a>
 
     <table class="table table-bordered">
         <thead>
@@ -47,5 +57,10 @@
             @endforelse
         </tbody>
     </table>
+
+    {{-- Hiển thị phân trang --}}
+    <div class="d-flex justify-content-center">
+        {{ $rooms->links() }}
+    </div>
 </div>
 @endsection

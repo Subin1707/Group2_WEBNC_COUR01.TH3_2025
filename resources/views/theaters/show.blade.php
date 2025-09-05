@@ -1,14 +1,13 @@
 @extends('layouts.app')
 
+@section('title', 'Chi tiết Rạp')
+
 @section('content')
-<div class="container">
-    <h1>Chi tiết Rạp</h1>
-    <p><strong>Tên rạp:</strong> {{ $theater->name }}</p>
-    <p><strong>Địa chỉ:</strong> {{ $theater->address }}</p>
-    <p><strong>Khu vực:</strong> {{ $theater->region }}</p>
-    <p><strong>Điện thoại:</strong> {{ $theater->phone }}</p>
+<h2>Chi tiết Rạp</h2>
+<p><strong>Tên:</strong> {{ $theater->name }}</p>
+<p><strong>Địa chỉ:</strong> {{ $theater->address }}</p>
+<p><strong>Khu vực:</strong> {{ $theater->region }}</p>
+<p><strong>Số điện thoại:</strong> {{ $theater->phone }}</p>
 
-    <a href="{{ route('theaters.index') }}" class="btn btn-primary">⬅ Quay lại</a>
-</div>
+<a href="{{ route('theaters.index') }}" class="btn btn-secondary">Quay lại</a>
 @endsection
-

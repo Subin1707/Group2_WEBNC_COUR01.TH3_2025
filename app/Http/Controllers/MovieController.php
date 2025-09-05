@@ -12,15 +12,16 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Movie::query();
+        $search = $request->input('search');
 
-        if ($request->has('search') && !empty($request->search)) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
+        $movies = Movie::when($search, function ($query, $search) {
+            $query->where('title', 'like', "%{$search}%")
+                  ->orWhere('genre', 'like', "%{$search}%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
 
-        $movies = $query->orderBy('created_at', 'desc')->paginate(5);
-
-        return view('movies.index', compact('movies'));
+        return view('movies.index', compact('movies', 'search'));
     }
 
     /**
@@ -36,16 +37,17 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'genre' => 'required|string|max:100',
+        $validated = $request->validate([
+            'title'        => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'genre'        => 'required|string|max:100',
             'release_date' => 'required|date',
         ]);
 
-        Movie::create($request->all());
+        Movie::create($validated);
 
-        return redirect()->route('movies.index')->with('success', 'Thêm phim thành công!');
+        return redirect()->route('movies.index')
+                         ->with('success', 'Thêm phim thành công!');
     }
 
     /**
@@ -69,16 +71,17 @@ class MovieController extends Controller
      */
     public function update(Request $request, Movie $movie)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'genre' => 'required|string|max:100',
+        $validated = $request->validate([
+            'title'        => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'genre'        => 'required|string|max:100',
             'release_date' => 'required|date',
         ]);
 
-        $movie->update($request->all());
+        $movie->update($validated);
 
-        return redirect()->route('movies.index')->with('success', 'Cập nhật phim thành công!');
+        return redirect()->route('movies.index')
+                         ->with('success', 'Cập nhật phim thành công!');
     }
 
     /**
@@ -87,6 +90,8 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         $movie->delete();
-        return redirect()->route('movies.index')->with('success', 'Xóa phim thành công!');
+
+        return redirect()->route('movies.index')
+                         ->with('success', 'Xóa phim thành công!');
     }
 }

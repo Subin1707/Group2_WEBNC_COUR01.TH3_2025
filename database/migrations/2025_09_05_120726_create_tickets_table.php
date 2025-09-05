@@ -6,20 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('showtime_id'); // FK đến suất chiếu
+            $table->string('seat_number');             // Ghế ngồi (VD: A10)
+            $table->decimal('price', 8, 2);            // Giá vé
+            $table->boolean('is_booked')->default(false); // Đã đặt chưa
             $table->timestamps();
+
+            $table->foreign('showtime_id')
+                ->references('id')->on('showtimes')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('tickets');

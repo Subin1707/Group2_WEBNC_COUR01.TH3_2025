@@ -2,63 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
+use App\Models\Showtime;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $tickets = Ticket::with('showtime')->get();
+        return view('tickets.index', compact('tickets'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $showtimes = Showtime::all();
+        return view('tickets.create', compact('showtimes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'showtime_id' => 'required|exists:showtimes,id',
+            'seat_number' => 'required|string|max:10',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:booked,available',
+        ]);
+
+        Ticket::create($request->all());
+
+        return redirect()->route('tickets.index')->with('success', 'Thêm vé thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Ticket $ticket)
     {
-        //
+        $showtimes = Showtime::all();
+        return view('tickets.edit', compact('ticket', 'showtimes'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Ticket $ticket)
     {
-        //
+        $request->validate([
+            'showtime_id' => 'required|exists:showtimes,id',
+            'seat_number' => 'required|string|max:10',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:booked,available',
+        ]);
+
+        $ticket->update($request->all());
+
+        return redirect()->route('tickets.index')->with('success', 'Cập nhật vé thành công!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Ticket $ticket)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $ticket->delete();
+        return redirect()->route('tickets.index')->with('success', 'Xóa vé thành công!');
     }
 }
