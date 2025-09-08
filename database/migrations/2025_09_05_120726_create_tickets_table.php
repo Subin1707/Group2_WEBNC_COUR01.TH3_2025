@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('showtime_id'); // FK đến suất chiếu
-            $table->string('seat_number');             // Ghế ngồi (VD: A10)
-            $table->decimal('price', 8, 2);            // Giá vé
-            $table->enum('status', ['available', 'booked'])->default('available'); // Trạng thái vé
+            $table->string('seat_number');             // Số ghế
+            $table->decimal('price', 10, 2);           // Giá vé
+            $table->boolean('status')->default(0);     // Trạng thái: 0=chưa bán, 1=đã bán
             $table->timestamps();
 
             $table->foreign('showtime_id')
-                ->references('id')->on('showtimes')
-                ->onDelete('cascade');
+                  ->references('id')->on('showtimes')
+                  ->onDelete('cascade');
         });
     }
 

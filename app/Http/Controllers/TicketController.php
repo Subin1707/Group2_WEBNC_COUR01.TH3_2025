@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function index()
+    /**
+     * Danh sách vé + tìm kiếm.
+     */
+    public function index(Request $request)
     {
-        $tickets = Ticket::with('showtime')->get();
+        $query = Ticket::with('showtime');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('seat_number', 'like', "%$search%");
+        }
+
+        $tickets = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('tickets.index', compact('tickets'));
     }
 
@@ -26,12 +37,17 @@ class TicketController extends Controller
             'showtime_id' => 'required|exists:showtimes,id',
             'seat_number' => 'required|string|max:10',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:booked,available',
+            'status' => 'required|boolean',
         ]);
 
         Ticket::create($request->all());
 
         return redirect()->route('tickets.index')->with('success', 'Thêm vé thành công!');
+    }
+
+    public function show(Ticket $ticket)
+    {
+        return view('tickets.show', compact('ticket'));
     }
 
     public function edit(Ticket $ticket)
@@ -46,7 +62,7 @@ class TicketController extends Controller
             'showtime_id' => 'required|exists:showtimes,id',
             'seat_number' => 'required|string|max:10',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:booked,available',
+            'status' => 'required|boolean',
         ]);
 
         $ticket->update($request->all());
