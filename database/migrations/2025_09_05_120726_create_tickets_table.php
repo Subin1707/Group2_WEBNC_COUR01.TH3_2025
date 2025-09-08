@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('showtime_id'); // FK đến suất chiếu
             $table->string('seat_number');             // Ghế ngồi (VD: A10)
             $table->decimal('price', 8, 2);            // Giá vé
-            $table->boolean('is_booked')->default(false); // Đã đặt chưa
+            $table->enum('status', ['available', 'booked'])->default('available'); // Trạng thái vé
             $table->timestamps();
 
             $table->foreign('showtime_id')
