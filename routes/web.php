@@ -6,6 +6,8 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ShowtimeController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\BookingController;
+
 
 Route::get('/', function () {
     return redirect()->route('movies.index');
@@ -25,3 +27,10 @@ Route::resource('showtimes', ShowtimeController::class);
 
 // Quản lý vé
 Route::resource('tickets', TicketController::class);
+
+// Đặt vé (Booking)
+Route::get('/booking', [BookingController::class, 'selectMovie'])->name('booking.selectMovie');
+Route::get('/booking/showtimes/{movie_id}', [BookingController::class, 'selectShowtime'])->name('booking.selectShowtime');
+Route::get('/booking/seats/{showtime_id}', [BookingController::class, 'selectSeat'])->name('booking.selectSeat');
+Route::post('/bookings', [BookingController::class, 'confirmBooking'])->name('bookings.store'); // dùng cho form submit
+Route::get('/booking/success', [BookingController::class, 'success'])->name('booking.success');
