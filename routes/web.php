@@ -8,6 +8,29 @@ use App\Http\Controllers\ShowtimeController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\BookingController;
 
+//
+// Chỉ admin mới vào được
+Route::middleware(['role:admin'])->group(function () {
+    Route::get('/admin', function () {
+        return "Trang quản trị Admin";
+    });
+});
+
+// Chỉ nhân viên bán vé
+Route::middleware(['role:staff'])->group(function () {
+    Route::get('/staff', function () {
+        return "Trang nhân viên bán vé";
+    });
+});
+
+// Khách hàng
+Route::middleware(['role:customer'])->group(function () {
+    Route::get('/customer', function () {
+        return "Trang khách hàng";
+    });
+});
+
+
 
 Route::get('/', function () {
     return redirect()->route('movies.index');
