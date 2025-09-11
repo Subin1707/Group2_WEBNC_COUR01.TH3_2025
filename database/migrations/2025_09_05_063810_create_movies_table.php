@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('title');              // Tên phim
             $table->text('description')->nullable(); // Mô tả
             $table->string('genre')->nullable();  // Thể loại
-            $table->integer('duration')->nullable();          // Thời lượng (phút)
+            $table->integer('duration');          // Thời lượng (phút)
             $table->date('release_date')->nullable(); // Ngày khởi chiếu
             $table->string('poster')->nullable(); // Ảnh poster
             $table->timestamps();
