@@ -81,7 +81,7 @@ class RoomController extends Controller
             'theater_id' => 'required|exists:theaters,id',
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:100',
-            'total_seats' => 'required|integer|min:1|max:50',
+            'total_seats' => 'required|integer|min:1',
         ]);
 
         $room->update($request->all());
