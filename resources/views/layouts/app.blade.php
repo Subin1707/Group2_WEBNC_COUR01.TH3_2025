@@ -1,38 +1,148 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="vi">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Dashboard')</title>
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+          rel="stylesheet">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+            background: #1a252f;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+        }
+
+        .sidebar .logout {
+            margin-top: auto;
+            padding: 15px 20px;
+            background: #c0392b;
+            text-align: center;
+        }
+
+        .sidebar .logout button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .admin-section {
+            margin-top: 30px;
+        }
+
+        .admin-section h3 {
+            margin-bottom: 10px;
+        }
+
+        .admin-links a {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .admin-links a:hover {
+            background: #2980b9;
+        }
+    </style>
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🎬 Cinema</h2>
+        <a href="{{ url('/dashboard') }}">🏠 Trang chủ</a>
+        <a href="#">⚙️ Quản lý</a>
 
-        {{-- Thanh điều hướng --}}
-        @include('layouts.navigation')
+        @guest
+            <!-- Nếu chưa đăng nhập -->
+            <div class="logout">
+                <a href="{{ route('login') }}">🔑 Đăng nhập</a>
+                <a href="{{ route('register') }}">📝 Đăng ký</a>
+            </div>
+        @endguest
 
-        {{-- Header trang con --}}
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
-
-        {{-- Nội dung chính --}}
-        <main>
-            {{ $slot }}
-        </main>
+        @auth
+            <!-- Nếu đã đăng nhập -->
+            <div class="logout">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">🚪 Đăng xuất</button>
+                </form>
+            </div>
+        @endauth
     </div>
+
+    <!-- Main content -->
+    <div class="main">
+        @yield('content')
+    </div>
+</div>
+
+<!-- Bootstrap JS (nếu cần dropdown, modal...) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
 </body>
 </html>
