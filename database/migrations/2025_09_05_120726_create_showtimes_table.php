@@ -14,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('room_id');    // FK đến phòng
             $table->dateTime('start_time');           // Thời gian bắt đầu
             $table->dateTime('end_time');             // Thời gian kết thúc
-            $table->decimal('price', 10, 2);          // Giá vé mặc định
+            $table->decimal('price', 10, 2)->default(50000.00);
             $table->timestamps();
 
             $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');

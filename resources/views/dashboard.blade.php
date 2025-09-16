@@ -18,6 +18,8 @@
             <a href="{{ route('rooms.index') }}">🎦 Quản lý phòng chiếu</a>
             <a href="{{ route('showtimes.index') }}">🕒 Quản lý suất chiếu</a>
             <a href="{{ route('tickets.index') }}">🎫 Quản lý vé</a>
+            <a href="{{ route('customers.index') }}">👥 Quản lý khách hàng</a>
+            <a href="{{ route('bookings.index') }}">📋 Quản lý đặt vé</a>
         </div>
     </div>
 @endsection

@@ -7,6 +7,8 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ShowtimeController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -27,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('rooms', RoomController::class);
     Route::resource('showtimes', ShowtimeController::class);
     Route::resource('tickets', TicketController::class);
+    Route::resource('customers', CustomerController::class);
+    Route::resource('bookings', BookingController::class);
 });
+
 require __DIR__.'/auth.php';
 ?>
