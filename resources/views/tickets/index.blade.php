@@ -55,6 +55,9 @@
         </tbody>
     </table>
 
-    {{ $tickets->links() }}
+ {{-- Phân trang Bootstrap 5 --}}
+    <div class="d-flex justify-content-center mt-3">
+        {{ $tickets->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
 </div>
 @endsection

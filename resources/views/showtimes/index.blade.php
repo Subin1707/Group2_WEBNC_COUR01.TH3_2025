@@ -54,6 +54,9 @@
         </tbody>
     </table>
 
-    {{ $showtimes->links() }}
+     {{-- Phân trang Bootstrap 5 --}}
+    <div class="d-flex justify-content-center mt-3">
+        {{ $showtimes->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
 </div>
 @endsection

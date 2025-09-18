@@ -51,5 +51,8 @@
     </tbody>
 </table>
 
-{{ $movies->links() }}
+ {{-- Phân trang Bootstrap 5 --}}
+    <div class="d-flex justify-content-center mt-3">
+        {{ $movies->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
 @endsection
