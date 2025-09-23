@@ -19,6 +19,10 @@
         <input type="text" name="genre" class="form-control" value="{{ $movie->genre }}" required>
     </div>
     <div class="mb-3">
+        <label for="duration" class="form-label">Thời lượng (phút)</label>
+        <input type="number" name="duration" class="form-control" value="{{ $movie->duration }}" required min="1" >
+    </div>
+    <div class="mb-3">
         <label for="release_date" class="form-label">Ngày phát hành</label>
         <input type="date" name="release_date" class="form-control" value="{{ $movie->release_date }}" required>
     </div>

@@ -18,6 +18,10 @@
         <input type="text" name="genre" class="form-control" required>
     </div>
     <div class="mb-3">
+        <label for="duration" class="form-label">Thời lượng (phút)</label>
+        <input type="number" name="duration" class="form-control" required min="1" value="90">
+    </div>
+    <div class="mb-3">
         <label for="release_date" class="form-label">Ngày phát hành</label>
         <input type="date" name="release_date" class="form-control" required>
     </div>

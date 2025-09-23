@@ -18,7 +18,7 @@ class MovieController extends Controller
             $query->where('title', 'like', "%{$search}%")
                   ->orWhere('genre', 'like', "%{$search}%");
         })
-        ->orderBy('created_at', 'desc')
+        ->orderBy('id', 'desc')
         ->paginate(10);
 
         return view('movies.index', compact('movies', 'search'));
@@ -42,6 +42,7 @@ class MovieController extends Controller
             'description'  => 'nullable|string',
             'genre'        => 'required|string|max:100',
             'release_date' => 'required|date',
+            'duration'     => 'required|integer|min:1'
         ]);
 
         Movie::create($validated);

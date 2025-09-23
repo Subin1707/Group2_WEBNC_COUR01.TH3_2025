@@ -38,7 +38,7 @@
         }
 
         .register-container input {
-            width: 100%;
+            width: 93%;
             padding: 10px 12px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
