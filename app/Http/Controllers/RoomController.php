@@ -24,7 +24,7 @@ class RoomController extends Controller
                   });
         }
 
-        $rooms = $query->orderBy('created_at', 'desc')->paginate(10);
+        $rooms = $query->orderBy('id', 'desc')->paginate(10);
 
         return view('rooms.index', compact('rooms'));
     }

@@ -22,7 +22,7 @@ class ShowtimeController extends Controller
             });
         }
 
-        $showtimes = $query->orderBy('start_time', 'desc')->paginate(10);
+        $showtimes = $query->orderBy('id', 'desc')->paginate(10);
 
         return view('showtimes.index', compact('showtimes'));
     }

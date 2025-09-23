@@ -30,7 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('showtimes', ShowtimeController::class);
     Route::resource('tickets', TicketController::class);
     Route::resource('customers', CustomerController::class);
-    Route::resource('bookings', BookingController::class);
+    
+
+
 });
 
 require __DIR__.'/auth.php';
