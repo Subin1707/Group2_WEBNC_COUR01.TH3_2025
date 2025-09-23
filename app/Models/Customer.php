@@ -14,5 +14,13 @@ class Customer extends Model
         'email',
         'phone',
         'address',
+        'password',
     ];
+
+    protected $hidden = ['password'];
+
+    public function bookings()
+    {
+        return $this->hasMany(BookingUser::class);
+    }
 }

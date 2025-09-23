@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class BookingUser extends Model
 {
     use HasFactory;
+
+    protected $table = 'bookings';
 
     protected $fillable = [
         'customer_id',
         'showtime_id',
+        'seat_id',
         'status',
     ];
 
@@ -25,8 +28,8 @@ class Booking extends Model
         return $this->belongsTo(Showtime::class);
     }
 
-    public function seats()
+    public function seat()
     {
-        return $this->belongsToMany(Seat::class, 'booking_seat');
+        return $this->belongsTo(Seat::class);
     }
 }
