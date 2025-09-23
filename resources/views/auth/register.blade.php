@@ -101,6 +101,9 @@
             <!-- Password -->
             <label for="password">Mật khẩu</label>
             <input id="password" type="password" name="password" placeholder="Nhập mật khẩu" required>
+            @error('password')
+                <p style="color:red; font-size:14px; text-align:left;">{{ $message }}</p>
+            @enderror
 
             <!-- Confirm Password -->
             <label for="password_confirmation">Xác nhận mật khẩu</label>
