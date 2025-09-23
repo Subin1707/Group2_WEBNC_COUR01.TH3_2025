@@ -39,12 +39,14 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'customer', // mặc định khách hàng
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false))->with('success', 'Đăng ký tài khoản thành công!');
+        return redirect(route('dashboard', absolute: false))
+            ->with('success', 'Đăng ký tài khoản thành công!');
     }
 }

@@ -8,49 +8,48 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ShowtimeController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\BookingUserController;   // 🔥 đổi BookingController -> BookingUserController
+use App\Http\Controllers\BookingUserController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Đây là nơi đăng ký tất cả các route web cho ứng dụng.
-|
 */
 
 // Route công khai
 Route::get('/', function () {
-    return view('dashboard');
+    return view('welcome'); // 👈 có thể để trang landing page
 });
 
-// Dashboard với middleware auth & verified
+// Dashboard chung (sẽ redirect theo role)
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Nhóm route auth
-Route::middleware('auth')->group(function () {
+// ========================= ADMIN ROUTES =========================
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin dashboard
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
 
-    // Profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Resource routes
+    // CRUD quản lý
     Route::resource('movies', MovieController::class);
     Route::resource('theaters', TheaterController::class);
     Route::resource('rooms', RoomController::class);
     Route::resource('showtimes', ShowtimeController::class);
     Route::resource('tickets', TicketController::class);
     Route::resource('customers', CustomerController::class);
-
 });
 
-// Nhóm route customer với middleware auth + role:customer
+// ========================= CUSTOMER ROUTES =========================
 Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
+    // Customer dashboard
+    Route::get('/dashboard', function () {
+        return view('customer.dashboard');
+    })->name('dashboard');
 
-    // Booking routes
+    // Booking flow
     Route::get('/booking', [BookingUserController::class, 'index'])->name('booking.index');
     Route::get('/booking/{movie}', [BookingUserController::class, 'selectTheater'])->name('booking.theater');
     Route::get('/booking/{movie}/{theater}', [BookingUserController::class, 'selectShowtime'])->name('booking.showtime');
@@ -59,7 +58,13 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
 
     // Lịch sử đặt vé
     Route::get('/profile/history', [BookingUserController::class, 'history'])->name('history');
+});
 
+// ========================= PROFILE ROUTES (chung) =========================
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Auth routes

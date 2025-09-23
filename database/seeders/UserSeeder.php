@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('123456789'),
+            'role' => 'admin', // 👈 thêm dòng này
         ]);
     }
 }
