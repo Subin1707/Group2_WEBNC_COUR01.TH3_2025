@@ -1,43 +1,54 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Customer;
 
 class CommonLoginController extends Controller
 {
+    /**
+     * Hiển thị form login chung
+     */
     public function showLoginForm()
     {
-        return view('auth.common-login');
+        return view('auth.common-login'); // file resources/views/auth/login.blade.php
     }
 
+    /**
+     * Xử lý đăng nhập (cả Admin và Customer)
+     */
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|string|min:6',
         ]);
 
-        $credentials = $request->only('email', 'password');
-
-        // Thử login admin (users)
+        // Thử login với guard admin (web)
         if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended('/admin/dashboard');
         }
 
-        // Thử login customer (customers)
+        // Thử login với guard customer
         if (Auth::guard('customer')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('customer.dashboard'));
+            return redirect()->intended('/customer/dashboard');
         }
 
+        // Nếu thất bại
         return back()->withErrors([
             'email' => 'Email hoặc mật khẩu không đúng.',
         ])->onlyInput('email');
     }
 
+    /**
+     * Đăng xuất (cả 2 guard)
+     */
     public function logout(Request $request)
     {
         if (Auth::guard('web')->check()) {
@@ -51,6 +62,6 @@ class CommonLoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login.form');
     }
 }

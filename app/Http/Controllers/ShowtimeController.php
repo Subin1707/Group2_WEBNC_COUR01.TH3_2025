@@ -18,7 +18,7 @@ class ShowtimeController extends Controller
     public function create()
     {
         $movies = Movie::all();
-        $rooms = Room::all();
+        $rooms  = Room::all();
         return view('showtimes.create', compact('movies', 'rooms'));
     }
 
@@ -39,14 +39,13 @@ class ShowtimeController extends Controller
 
     public function show(Showtime $showtime)
     {
-        $showtime->load(['movie', 'room']);
         return view('showtimes.show', compact('showtime'));
     }
 
     public function edit(Showtime $showtime)
     {
         $movies = Movie::all();
-        $rooms = Room::all();
+        $rooms  = Room::all();
         return view('showtimes.edit', compact('showtime', 'movies', 'rooms'));
     }
 

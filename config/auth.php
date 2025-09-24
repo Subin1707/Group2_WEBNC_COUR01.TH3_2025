@@ -3,69 +3,53 @@
 return [
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => 'web',
+        'passwords' => 'users',
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Guards
-    |--------------------------------------------------------------------------
-    */
+    // ==================== GUARDS ====================
     'guards' => [
-        // Admin (mặc định Laravel)
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
-        // Customer
         'customer' => [
             'driver' => 'session',
             'provider' => 'customers',
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | User Providers
-    |--------------------------------------------------------------------------
-    */
+    // ==================== PROVIDERS ====================
     'providers' => [
-        // Admin
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 
-        // Customer
         'customers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Resetting Passwords
-    |--------------------------------------------------------------------------
-    */
+    // ==================== PASSWORD RESET ====================
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
 
         'customers' => [
             'provider' => 'customers',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
 
-    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+    'password_timeout' => 10800,
 
 ];
