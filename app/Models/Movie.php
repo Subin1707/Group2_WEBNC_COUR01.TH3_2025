@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'title',
-        'description',
-        'genre',
-        'release_date',
+        'title', 'description', 'genre', 'duration', 'release_date', 'poster'
     ];
+
+    // Một phim có nhiều suất chiếu
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
 }

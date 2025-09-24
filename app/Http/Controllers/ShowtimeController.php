@@ -9,34 +9,22 @@ use Illuminate\Http\Request;
 
 class ShowtimeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Showtime::with(['movie', 'room']);
-
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->whereHas('movie', function($q) use ($search) {
-                $q->where('title', 'like', "%$search%");
-            })->orWhereHas('room', function($q) use ($search) {
-                $q->where('name', 'like', "%$search%");
-            });
-        }
-
-        $showtimes = $query->orderBy('id', 'desc')->paginate(10);
-
+        $showtimes = Showtime::with(['movie', 'room'])->get();
         return view('showtimes.index', compact('showtimes'));
     }
 
     public function create()
     {
         $movies = Movie::all();
-        $rooms  = Room::all();
+        $rooms = Room::all();
         return view('showtimes.create', compact('movies', 'rooms'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'movie_id'   => 'required|exists:movies,id',
             'room_id'    => 'required|exists:rooms,id',
             'start_time' => 'required|date',
@@ -44,26 +32,27 @@ class ShowtimeController extends Controller
             'price'      => 'required|numeric|min:0',
         ]);
 
-        Showtime::create($request->all());
+        Showtime::create($validated);
 
         return redirect()->route('showtimes.index')->with('success', 'Thêm suất chiếu thành công!');
     }
 
     public function show(Showtime $showtime)
     {
+        $showtime->load(['movie', 'room']);
         return view('showtimes.show', compact('showtime'));
     }
 
     public function edit(Showtime $showtime)
     {
         $movies = Movie::all();
-        $rooms  = Room::all();
+        $rooms = Room::all();
         return view('showtimes.edit', compact('showtime', 'movies', 'rooms'));
     }
 
     public function update(Request $request, Showtime $showtime)
     {
-        $request->validate([
+        $validated = $request->validate([
             'movie_id'   => 'required|exists:movies,id',
             'room_id'    => 'required|exists:rooms,id',
             'start_time' => 'required|date',
@@ -71,7 +60,7 @@ class ShowtimeController extends Controller
             'price'      => 'required|numeric|min:0',
         ]);
 
-        $showtime->update($request->all());
+        $showtime->update($validated);
 
         return redirect()->route('showtimes.index')->with('success', 'Cập nhật suất chiếu thành công!');
     }

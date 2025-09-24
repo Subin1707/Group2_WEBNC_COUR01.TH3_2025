@@ -10,14 +10,18 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('showtime_id');
-            $table->decimal('total_price', 8, 2);
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->unsignedBigInteger('user_id');       // Người đặt vé
+            $table->unsignedBigInteger('showtime_id');   // Suất chiếu
+            $table->unsignedBigInteger('seat_id');       // Ghế đã chọn
+            $table->integer('quantity')->default(1);     // Số lượng vé (thường =1 nếu mỗi seat là 1 vé)
+            $table->decimal('total_price', 10, 2);       // Tổng tiền
+            $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
             $table->timestamps();
 
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            // Khóa ngoại
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('showtime_id')->references('id')->on('showtimes')->onDelete('cascade');
+            $table->foreign('seat_id')->references('id')->on('seats')->onDelete('cascade');
         });
     }
 

@@ -10,31 +10,24 @@ class Room extends Model
     use HasFactory;
 
     protected $fillable = [
-        'theater_id',
-        'name',
-        'type',
-        'total_seats',
+        'theater_id', 'name', 'type', 'total_seats'
     ];
 
-    /**
-     * Mỗi phòng thuộc về một rạp chiếu.
-     */
+    // Phòng thuộc về một rạp
     public function theater()
     {
-        return $this->belongsTo(Theater::class, 'theater_id');
+        return $this->belongsTo(Theater::class);
     }
 
-    /**
-     * Mỗi phòng có nhiều suất chiếu.
-     */
-    public function showtimes()
-    {
-        return $this->hasMany(Showtime::class, 'room_id');
-    }
-
+    // Một phòng có nhiều ghế
     public function seats()
     {
         return $this->hasMany(Seat::class);
     }
 
+    // Một phòng có nhiều suất chiếu
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
 }

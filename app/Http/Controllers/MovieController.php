@@ -4,95 +4,90 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    /**
-     * Hiển thị danh sách phim (có tìm kiếm).
-     */
-    public function index(Request $request)
+    // Danh sách phim
+    public function index()
     {
-        $search = $request->input('search');
-
-        $movies = Movie::when($search, function ($query, $search) {
-            $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('genre', 'like', "%{$search}%");
-        })
-        ->orderBy('id', 'desc')
-        ->paginate(10);
-
-        return view('movies.index', compact('movies', 'search'));
+        $movies = Movie::latest()->get();
+        return view('movies.index', compact('movies'));
     }
 
-    /**
-     * Hiển thị form thêm phim mới.
-     */
+    // Form thêm mới
     public function create()
     {
         return view('movies.create');
     }
 
-    /**
-     * Lưu phim mới vào database.
-     */
+    // Lưu phim mới
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'genre'        => 'required|string|max:100',
-            'release_date' => 'required|date',
-            'duration'     => 'required|integer|min:1'
+            'genre'        => 'nullable|string|max:100',
+            'duration'     => 'nullable|integer|min:1',
+            'release_date' => 'nullable|date',
+            'poster'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        if ($request->hasFile('poster')) {
+            $validated['poster'] = $request->file('poster')->store('posters', 'public');
+        }
 
         Movie::create($validated);
 
-        return redirect()->route('movies.index')
-                         ->with('success', 'Thêm phim thành công!');
+        return redirect()->route('movies.index')->with('success', '🎬 Thêm phim thành công!');
     }
 
-    /**
-     * Hiển thị chi tiết phim.
-     */
+    // Chi tiết phim
     public function show(Movie $movie)
     {
         return view('movies.show', compact('movie'));
     }
 
-    /**
-     * Hiển thị form chỉnh sửa phim.
-     */
+    // Form sửa
     public function edit(Movie $movie)
     {
         return view('movies.edit', compact('movie'));
     }
 
-    /**
-     * Cập nhật thông tin phim.
-     */
+    // Cập nhật phim
     public function update(Request $request, Movie $movie)
     {
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'genre'        => 'required|string|max:100',
-            'release_date' => 'required|date',
+            'genre'        => 'nullable|string|max:100',
+            'duration'     => 'nullable|integer|min:1',
+            'release_date' => 'nullable|date',
+            'poster'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        if ($request->hasFile('poster')) {
+            // Xóa poster cũ nếu có
+            if ($movie->poster && Storage::disk('public')->exists($movie->poster)) {
+                Storage::disk('public')->delete($movie->poster);
+            }
+            $validated['poster'] = $request->file('poster')->store('posters', 'public');
+        }
 
         $movie->update($validated);
 
-        return redirect()->route('movies.index')
-                         ->with('success', 'Cập nhật phim thành công!');
+        return redirect()->route('movies.index')->with('success', '✅ Cập nhật phim thành công!');
     }
 
-    /**
-     * Xóa phim.
-     */
+    // Xóa phim
     public function destroy(Movie $movie)
     {
-        $movie->delete();
+        // Xóa poster trong storage nếu có
+        if ($movie->poster && Storage::disk('public')->exists($movie->poster)) {
+            Storage::disk('public')->delete($movie->poster);
+        }
 
-        return redirect()->route('movies.index')
-                         ->with('success', 'Xóa phim thành công!');
+        $movie->delete();
+        return redirect()->route('movies.index')->with('success', '🗑️ Xóa phim thành công!');
     }
 }

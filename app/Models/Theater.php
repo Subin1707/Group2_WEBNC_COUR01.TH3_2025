@@ -9,8 +9,11 @@ class Theater extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'address', 'region', 'phone'];
+    protected $fillable = [
+        'name', 'address', 'region', 'phone'
+    ];
 
+    // Một rạp có nhiều phòng
     public function rooms()
     {
         return $this->hasMany(Room::class);

@@ -10,19 +10,18 @@ class Seat extends Model
     use HasFactory;
 
     protected $fillable = [
-        'room_id',
-        'seat_row',
-        'seat_number',
-        'status',
+        'room_id', 'seat_number', 'type', 'status'
     ];
 
+    // Ghế thuộc về một phòng
     public function room()
     {
         return $this->belongsTo(Room::class);
     }
 
+    // Ghế có thể xuất hiện trong nhiều bookings
     public function bookings()
     {
-        return $this->belongsToMany(Booking::class, 'booking_seat');
+        return $this->hasMany(Booking::class);
     }
 }

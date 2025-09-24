@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('room_id');
-            $table->string('seat_row'); // A, B, C...
-            $table->integer('seat_number'); // 1, 2, 3...
-            $table->enum('status', ['available', 'unavailable'])->default('available');
+            $table->unsignedBigInteger('room_id');     // FK đến phòng
+            $table->string('seat_number');             // Ký hiệu ghế (VD: A1, A2, B3...)
+            $table->enum('status', ['available', 'booked'])->default('available');
             $table->timestamps();
 
-            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
+            $table->foreign('room_id')
+                  ->references('id')->on('rooms')
+                  ->onDelete('cascade');
         });
     }
 

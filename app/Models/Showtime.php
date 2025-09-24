@@ -10,28 +10,24 @@ class Showtime extends Model
     use HasFactory;
 
     protected $fillable = [
-        'movie_id',
-        'room_id',
-        'start_time',
-        'end_time',
-        'price',
+        'movie_id', 'room_id', 'start_time', 'end_time', 'price'
     ];
 
-    // Quan hệ: suất chiếu thuộc 1 phim
+    // Suất chiếu thuộc về phim
     public function movie()
     {
         return $this->belongsTo(Movie::class);
     }
 
-    // Quan hệ: suất chiếu thuộc 1 phòng
+    // Suất chiếu thuộc về phòng
     public function room()
     {
         return $this->belongsTo(Room::class);
     }
 
-    // Quan hệ: suất chiếu có nhiều vé
-    public function tickets()
+    // Một suất chiếu có nhiều bookings
+    public function bookings()
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Booking::class);
     }
 }
