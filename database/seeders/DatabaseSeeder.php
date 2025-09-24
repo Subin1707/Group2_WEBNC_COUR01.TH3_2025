@@ -3,22 +3,28 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Customer;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        $this->call([
-            UserSeeder::class,      // chỉ seed admin
-            TheaterSeeder::class,
-            RoomSeeder::class,
-            SeatSeeder::class,
-            MovieSeeder::class,
-            ShowtimeSeeder::class,
-            // ❌ KHÔNG gọi CustomerSeeder nữa
+        // Admin test
+        User::create([
+            'name' => 'Admin Demo',
+            'email' => 'admin@test.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        // Customer test
+        Customer::create([
+            'name' => 'Customer Demo',
+            'email' => 'customer@test.com',
+            'phone' => '0123456789',
+            'address' => '123 Demo Street',
+            'password' => Hash::make('123456'),
         ]);
     }
 }

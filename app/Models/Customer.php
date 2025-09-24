@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable; // để dùng Auth
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Customer extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'customers'; // bảng trong DB
+    protected $table = 'customers';
 
     protected $fillable = [
         'name',
@@ -22,14 +22,6 @@ class Customer extends Authenticatable
 
     protected $hidden = [
         'password',
-        'remember_token', // ẩn khi json
+        'remember_token',
     ];
-
-    /**
-     * Quan hệ 1-n: Customer có nhiều Booking
-     */
-    public function bookings()
-    {
-        return $this->hasMany(BookingUser::class, 'customer_id');
-    }
 }

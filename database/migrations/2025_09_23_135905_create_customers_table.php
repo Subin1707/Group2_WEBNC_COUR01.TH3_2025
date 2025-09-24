@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
@@ -14,8 +13,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->string('password'); // 🔑 bắt buộc để login
-            $table->rememberToken();    // 🔑 dùng cho "remember me"
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
