@@ -10,17 +10,13 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BookingUserController;
 use App\Http\Controllers\Auth\CustomerAuthController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController; // Admin login (Laravel Breeze/Jetstream)
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Auth\AuthenticatedSessionController; // Admin login (Breeze/Jetstream)
 
 // ========================= PUBLIC ROUTES =========================
-// Trang chủ => login customer
-Route::get('/', [CustomerAuthController::class, 'showLoginForm'])->name('customer.login');
+// Trang chủ => redirect customer login
+Route::get('/', function () {
+    return redirect()->route('customer.login');
+});
 
 // ========================= ADMIN ROUTES =========================
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -87,6 +83,3 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
     });
 });
-
-// ========================= AUTH ROUTES (Admin mặc định) =========================
-require __DIR__.'/auth.php';
