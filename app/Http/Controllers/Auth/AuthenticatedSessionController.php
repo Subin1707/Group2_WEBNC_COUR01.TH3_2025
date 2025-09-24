@@ -3,54 +3,63 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Hiển thị form login chung cho admin & customer.
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('auth.login'); // 👈 form dùng chung
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Xử lý login.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
+        $remember = $request->boolean('remember');
 
-        $request->session()->regenerate();
-
-        // Kiểm tra role và phân luồng
-        $user = Auth::user();
-
-        if ($user->role === 'admin') {
+        // Admin login (guard web)
+        if (Auth::guard('web')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
             return redirect()->route('admin.dashboard')
                 ->with('success', 'Chào mừng Admin!');
         }
 
-        return redirect()->route('customer.dashboard')
-            ->with('success', 'Đăng nhập thành công!');
+        // Customer login (guard customer)
+        if (Auth::guard('customer')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return redirect()->route('customer.dashboard')
+                ->with('success', 'Đăng nhập thành công!');
+        }
+
+        // Sai thông tin
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không chính xác.',
+        ])->onlyInput('email');
     }
 
     /**
-     * Destroy an authenticated session.
+     * Logout admin hoặc customer.
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        } elseif (Auth::guard('customer')->check()) {
+            Auth::guard('customer')->logout();
+        }
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login'); // 👈 quay về form login chung
     }
 }

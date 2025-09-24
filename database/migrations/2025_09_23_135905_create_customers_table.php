@@ -13,7 +13,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable(); // 🔥 thêm dòng này
+            $table->string('address')->nullable();
+            $table->string('password'); // 🔑 bắt buộc để login
+            $table->rememberToken();    // 🔑 dùng cho "remember me"
             $table->timestamps();
         });
     }
