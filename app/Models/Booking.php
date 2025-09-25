@@ -13,19 +13,16 @@ class Booking extends Model
         'user_id', 'showtime_id', 'seat_id', 'quantity', 'total_price', 'status'
     ];
 
-    // Booking thuộc về User
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class); // admin hoặc customer guard tùy setup
     }
 
-    // Booking thuộc về suất chiếu
     public function showtime()
     {
         return $this->belongsTo(Showtime::class);
     }
 
-    // Booking thuộc về ghế
     public function seat()
     {
         return $this->belongsTo(Seat::class);

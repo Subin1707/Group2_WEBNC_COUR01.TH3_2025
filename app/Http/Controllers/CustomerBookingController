@@ -1,0 +1,48 @@
+<?php
+namespace App\Http\Controllers\Customer;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Booking;
+use App\Models\Showtime;
+use Illuminate\Support\Facades\Auth;
+
+class BookingController extends Controller
+{
+    public function create($showtimeId)
+    {
+        $showtime = Showtime::with('movie','room.seats')->findOrFail($showtimeId);
+        return view('customer.booking.create', compact('showtime'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'showtime_id'=>'required|exists:showtimes,id',
+            'seat_id'=>'required|exists:seats,id',
+            'quantity'=>'required|integer|min:1'
+        ]);
+
+        $customer = Auth::guard('customer')->user();
+        $seat = \App\Models\Seat::findOrFail($request->seat_id);
+
+        Booking::create([
+            'user_id' => $customer->id,
+            'showtime_id' => $request->showtime_id,
+            'seat_id' => $seat->id,
+            'quantity' => $request->quantity,
+            'total_price' => $seat->price * $request->quantity,
+            'status' => 'pending'
+        ]);
+
+        return redirect()->route('customer.history')->with('success','Booking created!');
+    }
+
+    public function history()
+    {
+        $customer = Auth::guard('customer')->user();
+        $bookings = Booking::with('showtime.movie','showtime.room','seat')
+            ->where('user_id',$customer->id)->latest()->get();
+        return view('customer.booking.history', compact('bookings'));
+    }
+}

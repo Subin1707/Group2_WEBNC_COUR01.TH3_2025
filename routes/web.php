@@ -1,48 +1,72 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Controllers
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\ShowtimeController;
-use App\Http\Controllers\BookingController;
+
+// Auth
 use App\Http\Controllers\Auth\CommonLoginController;
 
-// ==================== AUTH ====================
-// Trang chủ => login chung
+// Booking Controllers
+use App\Http\Controllers\AdminBookingController;
+use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
+
+// Dashboard Controllers
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [CommonLoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [CommonLoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [CommonLoginController::class, 'logout'])->name('logout');
 
-// ==================== ADMIN DASHBOARD ====================
-Route::middleware(['auth:web'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+/*
+|--------------------------------------------------------------------------
+| ADMIN DASHBOARD + RESOURCE ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function () {
 
+    // Dashboard với thống kê
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Resource routes: quản lý dữ liệu
     Route::resources([
         'movies'    => MovieController::class,
         'theaters'  => TheaterController::class,
         'rooms'     => RoomController::class,
         'seats'     => SeatController::class,
         'showtimes' => ShowtimeController::class,
-        'bookings'  => BookingController::class,
+        'bookings'  => AdminBookingController::class, // admin quản lý booking
     ]);
 });
 
-// ==================== CUSTOMER DASHBOARD ====================
-Route::middleware(['auth:customer'])->prefix('customer')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('customer.dashboard');
-    })->name('customer.dashboard');
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER DASHBOARD + BOOKING + MOVIES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:customer'])->prefix('customer')->name('customer.')->group(function () {
 
-    // Khách hàng chỉ xem và đặt vé
-    Route::get('/movies', [MovieController::class, 'index'])->name('customer.movies.index');
-    Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('customer.movies.show');
+    // Dashboard Customer
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/showtimes/{movie}', [ShowtimeController::class, 'index'])->name('customer.showtimes.index');
+    // Booking routes
+    Route::get('/booking/{showtime}', [CustomerBookingController::class, 'create'])->name('booking.create');
+    Route::post('/booking', [CustomerBookingController::class, 'store'])->name('booking.store');
+    Route::get('/history', [CustomerBookingController::class, 'history'])->name('history');
 
-    Route::get('/booking/{showtime}', [BookingController::class, 'create'])->name('customer.booking.create');
-    Route::post('/booking', [BookingController::class, 'store'])->name('customer.booking.store');
+    // Movies + Showtimes
+    Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+    Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
+    Route::get('/showtimes/{movie}', [ShowtimeController::class, 'index'])->name('showtimes.index');
 });

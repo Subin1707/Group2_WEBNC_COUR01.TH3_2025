@@ -1,92 +1,48 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Customer;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Showtime;
-use App\Models\Seat;
-use App\Models\User;
-use App\Models\Customer;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    public function index()
+    // Hiển thị form đặt vé
+    public function create($showtimeId)
     {
-        $bookings = Booking::with(['showtime.movie', 'seat', 'user', 'customer'])->get();
-        return view('bookings.index', compact('bookings'));
+        $showtime = Showtime::findOrFail($showtimeId);
+        return view('customer.booking.create', compact('showtime'));
     }
 
-    public function create()
-    {
-        $showtimes = Showtime::with('movie')->get();
-        $seats     = Seat::where('status', 'available')->get();
-        $users     = User::all();
-        $customers = Customer::all();
-
-        return view('bookings.create', compact('showtimes', 'seats', 'users', 'customers'));
-    }
-
+    // Lưu vé mới
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'showtime_id' => 'required|exists:showtimes,id',
-            'seat_id'     => 'required|exists:seats,id',
-            'user_id'     => 'nullable|exists:users,id',
-            'customer_id' => 'nullable|exists:customers,id',
-            'total_price' => 'required|numeric|min:0',
+            'seat_number' => 'required|string|max:10',
         ]);
 
-        // update seat status = booked
-        $seat = Seat::findOrFail($validated['seat_id']);
-        if ($seat->status === 'booked') {
-            return back()->withErrors(['seat_id' => 'Ghế này đã được đặt!']);
-        }
-        $seat->update(['status' => 'booked']);
-
-        Booking::create($validated);
-
-        return redirect()->route('bookings.index')->with('success', 'Đặt vé thành công!');
-    }
-
-    public function show(Booking $booking)
-    {
-        return view('bookings.show', compact('booking'));
-    }
-
-    public function edit(Booking $booking)
-    {
-        $showtimes = Showtime::with('movie')->get();
-        $seats     = Seat::all();
-        $users     = User::all();
-        $customers = Customer::all();
-
-        return view('bookings.edit', compact('booking', 'showtimes', 'seats', 'users', 'customers'));
-    }
-
-    public function update(Request $request, Booking $booking)
-    {
-        $validated = $request->validate([
-            'showtime_id' => 'required|exists:showtimes,id',
-            'seat_id'     => 'required|exists:seats,id',
-            'user_id'     => 'nullable|exists:users,id',
-            'customer_id' => 'nullable|exists:customers,id',
-            'total_price' => 'required|numeric|min:0',
+        Booking::create([
+            'customer_id' => Auth::guard('customer')->id(),
+            'showtime_id' => $request->showtime_id,
+            'seat_number' => $request->seat_number,
+            'status' => 'booked',
         ]);
 
-        $booking->update($validated);
-
-        return redirect()->route('bookings.index')->with('success', 'Cập nhật vé thành công!');
+        return redirect()->route('customer.history')->with('success', 'Đặt vé thành công!');
     }
 
-    public function destroy(Booking $booking)
+    // Lịch sử đặt vé
+    public function history()
     {
-        // Trả lại ghế thành available
-        if ($booking->seat) {
-            $booking->seat->update(['status' => 'available']);
-        }
+        $bookings = Booking::with('showtime.movie', 'showtime.room.theater')
+            ->where('customer_id', Auth::guard('customer')->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $booking->delete();
-        return redirect()->route('bookings.index')->with('success', 'Xóa vé thành công!');
+        return view('customer.booking.history', compact('bookings'));
     }
 }
