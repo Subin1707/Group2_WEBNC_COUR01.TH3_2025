@@ -16,7 +16,6 @@ class Ticket extends Model
         'status',
     ];
 
-    // Quan hệ: vé thuộc 1 suất chiếu
     public function showtime()
     {
         return $this->belongsTo(Showtime::class);

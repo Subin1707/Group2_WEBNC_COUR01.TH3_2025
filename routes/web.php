@@ -17,6 +17,9 @@ use App\Http\Controllers\Auth\CommonRegisterController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
 
+// Admin Ticket Controller
+use App\Http\Controllers\AdminTicketController;
+
 // Dashboard Controllers
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
@@ -42,8 +45,11 @@ Route::post('/register', [CommonRegisterController::class, 'register'])->name('r
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    // Resource routes
     Route::resources([
         'movies'    => MovieController::class,
         'theaters'  => TheaterController::class,
@@ -51,6 +57,7 @@ Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function
         'seats'     => SeatController::class,
         'showtimes' => ShowtimeController::class,
         'bookings'  => AdminBookingController::class,
+        'tickets'   => AdminTicketController::class, // <-- Route cho Tickets
     ]);
 });
 
@@ -60,13 +67,19 @@ Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:customer'])->prefix('customer')->name('customer.')->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
+    // Booking routes
     Route::get('/booking/{showtime}', [CustomerBookingController::class, 'create'])->name('booking.create');
     Route::post('/booking', [CustomerBookingController::class, 'store'])->name('booking.store');
     Route::get('/history', [CustomerBookingController::class, 'history'])->name('history');
 
+    // Movies
     Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
     Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
+
+    // Showtimes per movie
     Route::get('/showtimes/{movie}', [ShowtimeController::class, 'index'])->name('showtimes.index');
 });
