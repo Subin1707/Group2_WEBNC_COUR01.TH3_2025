@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>🎫 Chi tiết Booking</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    @vite('resources/css/app.css')
+   <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 <body class="bg-gray-100 min-h-screen">
 <div class="max-w-4xl mx-auto py-10">
