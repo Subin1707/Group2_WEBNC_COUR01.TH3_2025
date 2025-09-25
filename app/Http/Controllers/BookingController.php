@@ -22,14 +22,17 @@ class BookingController extends Controller
     {
         $request->validate([
             'showtime_id' => 'required|exists:showtimes,id',
-            'seat_number' => 'required|string|max:10',
+            'seat_id' => 'required|exists:seats,id',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         Booking::create([
-            'customer_id' => Auth::guard('customer')->id(),
+            'user_id' => Auth::id(), // dùng user_id thay vì customer_id
             'showtime_id' => $request->showtime_id,
-            'seat_number' => $request->seat_number,
-            'status' => 'booked',
+            'seat_id' => $request->seat_id,
+            'quantity' => $request->quantity,
+            'total_price' => $request->quantity * $request->price, // giá tính theo request
+            'status' => 'pending',
         ]);
 
         return redirect()->route('customer.history')->with('success', 'Đặt vé thành công!');
@@ -39,7 +42,7 @@ class BookingController extends Controller
     public function history()
     {
         $bookings = Booking::with('showtime.movie', 'showtime.room.theater')
-            ->where('customer_id', Auth::guard('customer')->id())
+            ->where('user_id', Auth::id()) // dùng user_id thay vì customer_id
             ->orderBy('created_at', 'desc')
             ->get();
 
