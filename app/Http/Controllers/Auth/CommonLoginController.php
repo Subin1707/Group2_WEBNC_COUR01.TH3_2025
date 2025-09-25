@@ -16,30 +16,30 @@ class CommonLoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'type' => 'required|in:admin,customer',
+            'role' => 'required|in:web,customer',
+            'email' => 'required|string|email',
+            'password' => 'required|string',
         ]);
 
-        $guard = $request->type === 'admin' ? 'web' : 'customer';
+        $guard = $request->role;
 
-        if (Auth::guard($guard)->attempt($request->only('email', 'password'))) {
-            return redirect()->intended($guard === 'web' ? route('admin.dashboard') : route('customer.dashboard'));
+        if (Auth::guard($guard)->attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ], $request->filled('remember'))) {
+
+            return $guard === 'web'
+                ? redirect()->route('admin.dashboard')
+                : redirect()->route('customer.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Thông tin đăng nhập không hợp lệ']);
+        return back()->with('error', 'Thông tin đăng nhập không chính xác!');
     }
 
     public function logout(Request $request)
     {
-        if (Auth::guard('web')->check()) {
-            Auth::guard('web')->logout();
-        }
-
-        if (Auth::guard('customer')->check()) {
-            Auth::guard('customer')->logout();
-        }
-
+        $guard = $request->role ?? 'web'; // mặc định web
+        Auth::guard($guard)->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
