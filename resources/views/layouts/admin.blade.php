@@ -3,42 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        .sidebar { width: 250px; min-height: 100vh; background: #f8f9fa; padding: 20px; }
-        .sidebar a { display: block; margin-bottom: 10px; text-decoration: none; color: #333; }
-        .sidebar a:hover { text-decoration: underline; }
-        .main { flex: 1; padding: 20px; }
-        .wrapper { display: flex; }
-    </style>
+    <title>Admin Dashboard - @yield('title', 'Dashboard')</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+    @stack('styles')
 </head>
-<body>
-<div class="wrapper">
-    <div class="sidebar">
-        <h3>🎬 Admin Panel</h3>
-        <p class="border-bottom mb-2 p-2 text-center">👋 {{ Auth::user()->name }}</p>
+<body class="bg-light">
 
-        <a href="{{ route('admin.dashboard') }}">🏠 Dashboard</a>
-        <a href="{{ route('admin.movies.index') }}">🎞️ Movies</a>
-        <a href="{{ route('admin.theaters.index') }}">🏢 Theaters</a>
-        <a href="{{ route('admin.rooms.index') }}">📺 Rooms</a>
-        <a href="{{ route('admin.showtimes.index') }}">🕒 Showtimes</a>
-        <a href="{{ route('admin.bookings.index') }}">🎫 Bookings</a>
-        {{-- <a href="{{ route('admin.customers.index') }}">👥 Customers</a> --}}
+<div class="d-flex" id="wrapper">
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="btn btn-danger w-100 mt-3">🚪 Logout</button>
-        </form>
+    <!-- Sidebar -->
+    <div class="border-end bg-white" id="sidebar-wrapper" style="min-width: 220px;">
+        <div class="sidebar-heading border-bottom bg-primary text-white text-center py-3">
+            🎬 Cinema Admin
+        </div>
+        <div class="list-group list-group-flush">
+            <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action">🏠 Dashboard</a>
+            <a href="{{ route('admin.movies.index') }}" class="list-group-item list-group-item-action">🎞️ Movies</a>
+            <a href="{{ route('admin.theaters.index') }}" class="list-group-item list-group-item-action">🏢 Theaters</a>
+            <a href="{{ route('admin.rooms.index') }}" class="list-group-item list-group-item-action">📺 Rooms</a>
+            <a href="{{ route('admin.showtimes.index') }}" class="list-group-item list-group-item-action">🕒 Showtimes</a>
+            <a href="{{ route('admin.bookings.index') }}" class="list-group-item list-group-item-action">🎫 Bookings</a>
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-3 px-3">
+                @csrf
+                <button type="submit" class="btn btn-danger w-100">🚪 Logout</button>
+            </form>
+        </div>
     </div>
+    <!-- /#sidebar-wrapper -->
 
-    <div class="main">
-        @yield('content')
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="w-100">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+            <div class="container-fluid">
+                <button class="btn btn-primary" id="sidebarToggle">☰</button>
+                <span class="ms-3">Xin chào, <strong>{{ Auth::user()->name }}</strong></span>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            @yield('content')
+        </div>
     </div>
+    <!-- /#page-content-wrapper -->
+
 </div>
+<!-- /#wrapper -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Toggle sidebar
+    const toggleButton = document.getElementById('sidebarToggle');
+    const wrapper = document.getElementById('wrapper');
+    toggleButton.addEventListener('click', () => {
+        wrapper.classList.toggle('toggled');
+    });
+</script>
+@stack('scripts')
 </body>
 </html>
