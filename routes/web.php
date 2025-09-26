@@ -12,15 +12,18 @@ use App\Http\Controllers\ShowtimeController;
 use App\Http\Controllers\Auth\CommonLoginController;
 use App\Http\Controllers\Auth\CommonRegisterController;
 
-// Booking Controllers
+// Admin Controllers
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\AdminBookingController;
+
+// Customer Controllers
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
 
-// Dashboard Controllers
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
-
 /*
+|--------------------------------------------------------------------------
 | AUTH ROUTES
+|--------------------------------------------------------------------------
 */
 Route::get('/', [CommonLoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [CommonLoginController::class, 'login'])->name('login.submit');
@@ -30,7 +33,9 @@ Route::get('/register', [CommonRegisterController::class, 'showRegistrationForm'
 Route::post('/register', [CommonRegisterController::class, 'register'])->name('register.submit');
 
 /*
+|--------------------------------------------------------------------------
 | ADMIN DASHBOARD + RESOURCE ROUTES
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -40,12 +45,18 @@ Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function
         'theaters'  => TheaterController::class,
         'rooms'     => RoomController::class,
         'showtimes' => ShowtimeController::class,
-        // các resource khác của admin
     ]);
+
+    // Admin booking routes
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+    Route::put('/bookings/{booking}', [AdminBookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('bookings.destroy');
 });
 
 /*
+|--------------------------------------------------------------------------
 | CUSTOMER DASHBOARD + BOOKING + MOVIES
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth:customer'])->prefix('customer')->name('customer.')->group(function () {
     // Dashboard
