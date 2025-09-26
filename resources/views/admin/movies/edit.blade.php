@@ -1,39 +1,36 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', 'Edit Movie')
 
 @section('content')
-    <h1>Chỉnh sửa phim: {{ $movie->title }}</h1>
-
-    <form action="{{ route('admin.movies.update', $movie->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-
-        <label>Tiêu đề:</label><br>
-        <input type="text" name="title" value="{{ old('title', $movie->title) }}" required><br><br>
-
-        <label>Mô tả:</label><br>
-        <textarea name="description">{{ old('description', $movie->description) }}</textarea><br><br>
-
-        <label>Thể loại:</label><br>
-        <input type="text" name="genre" value="{{ old('genre', $movie->genre) }}"><br><br>
-
-        <label>Thời lượng (phút):</label><br>
-        <input type="number" name="duration" value="{{ old('duration', $movie->duration) }}" min="1"><br><br>
-
-        <label>Ngày khởi chiếu:</label><br>
-        <input type="date" name="release_date" value="{{ old('release_date', $movie->release_date) }}"><br><br>
-
-        <label>Poster hiện tại:</label><br>
+<h1>✏️ Edit Movie</h1>
+<form method="POST" action="{{ route('admin.movies.update', $movie->id) }}" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    <div class="mb-3">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" value="{{ $movie->title }}" required>
+    </div>
+    <div class="mb-3">
+        <label>Genre</label>
+        <input type="text" name="genre" class="form-control" value="{{ $movie->genre }}">
+    </div>
+    <div class="mb-3">
+        <label>Duration (minutes)</label>
+        <input type="number" name="duration" class="form-control" value="{{ $movie->duration }}">
+    </div>
+    <div class="mb-3">
+        <label>Release Date</label>
+        <input type="date" name="release_date" class="form-control" value="{{ $movie->release_date }}">
+    </div>
+    <div class="mb-3">
+        <label>Poster</label>
+        <input type="file" name="poster" class="form-control">
         @if($movie->poster)
-            <img src="{{ asset('storage/'.$movie->poster) }}" alt="Poster" width="150"><br>
-        @else
-            <p>Chưa có poster</p>
+            <img src="{{ asset('storage/' . $movie->poster) }}" alt="Poster" width="100" class="mt-2">
         @endif
-        <br>
-
-        <label>Cập nhật Poster mới:</label><br>
-        <input type="file" name="poster"><br><br>
-
-        <button type="submit">💾 Cập nhật</button>
-        <a href="{{ route('admin.movies.index') }}">⬅️ Quay lại</a>
-    </form>
+    </div>
+    <button class="btn btn-success">Update</button>
+    <a href="{{ route('admin.movies.index') }}" class="btn btn-secondary">Cancel</a>
+</form>
 @endsection

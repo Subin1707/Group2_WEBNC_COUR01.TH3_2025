@@ -9,7 +9,7 @@
     @if($movies->count())
         <div class="list-group">
             @foreach($movies as $movie)
-                <a href="{{ route('customer.movies.show', $movie->id) }}" class="list-group-item list-group-item-action">
+                <a href="{{ route('customer.booking.form') }}" class="list-group-item list-group-item-action">
                     {{ $movie->title }}
                 </a>
             @endforeach

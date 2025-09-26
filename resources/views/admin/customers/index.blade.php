@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Quản lý khách hàng')
 
@@ -10,7 +10,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('admin.customers.create') }}" class="btn btn-primary mb-3">Thêm khách hàng</a>
+    <a href="{{ route('admin.customers.create') }}" class="btn btn-primary mb-3">+ Thêm khách hàng</a>
 
     <table class="table table-bordered">
         <thead>

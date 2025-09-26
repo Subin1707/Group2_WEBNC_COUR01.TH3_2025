@@ -1,31 +1,44 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', 'Movies')
 
 @section('content')
-    <h1>Danh sách phim</h1>
+<h1>🎞️ Movies</h1>
+<a href="{{ route('admin.movies.create') }}" class="btn btn-success mb-2">➕ Add Movie</a>
 
-    <a href="{{ route('admin.movies.create') }}">➕ Thêm phim mới</a>
-
-    @if($movies->count())
-        <ul>
-            @foreach($movies as $movie)
-                <li>
-                    <a href="{{ route('admin.movies.show', $movie->id) }}">
-                        {{ $movie->title }}
-                    </a>
-
-                    | <a href="{{ route('admin.movies.edit', $movie->id) }}">✏️ Sửa</a>
-
-                    | <form action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa phim này?')">
-                            🗑️ Xóa
-                        </button>
-                    </form>
-                </li>
-            @endforeach
-        </ul>
-    @else
-        <p>Chưa có phim nào.</p>
-    @endif
+@if($movies->count())
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#ID</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Duration</th>
+            <th>Release Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($movies as $movie)
+        <tr>
+            <td>{{ $movie->id }}</td>
+            <td>{{ $movie->title }}</td>
+            <td>{{ $movie->genre }}</td>
+            <td>{{ $movie->duration }}</td>
+            <td>{{ $movie->release_date }}</td>
+            <td>
+                <a href="{{ route('admin.movies.edit', $movie->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                <form action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button onclick="return confirm('Delete?')" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+@else
+<p>Chưa có phim nào.</p>
+@endif
 @endsection

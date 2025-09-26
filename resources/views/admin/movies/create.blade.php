@@ -1,30 +1,32 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', 'Add Movie')
 
 @section('content')
-    <h1>Thêm phim mới</h1>
-
-    <form action="{{ route('admin.movies.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <label>Tiêu đề:</label><br>
-        <input type="text" name="title" value="{{ old('title') }}" required><br><br>
-
-        <label>Mô tả:</label><br>
-        <textarea name="description">{{ old('description') }}</textarea><br><br>
-
-        <label>Thể loại:</label><br>
-        <input type="text" name="genre" value="{{ old('genre') }}"><br><br>
-
-        <label>Thời lượng (phút):</label><br>
-        <input type="number" name="duration" value="{{ old('duration', 90) }}" min="1"><br><br>
-
-        <label>Ngày khởi chiếu:</label><br>
-        <input type="date" name="release_date" value="{{ old('release_date') }}"><br><br>
-
-        <label>Poster:</label><br>
-        <input type="file" name="poster"><br><br>
-
-        <button type="submit">💾 Lưu</button>
-        <a href="{{ route('admin.movies.index') }}">⬅️ Quay lại</a>
-    </form>
+<h1>➕ Add Movie</h1>
+<form method="POST" action="{{ route('admin.movies.store') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="mb-3">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Genre</label>
+        <input type="text" name="genre" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label>Duration (minutes)</label>
+        <input type="number" name="duration" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label>Release Date</label>
+        <input type="date" name="release_date" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label>Poster</label>
+        <input type="file" name="poster" class="form-control">
+    </div>
+    <button class="btn btn-success">Save</button>
+    <a href="{{ route('admin.movies.index') }}" class="btn btn-secondary">Cancel</a>
+</form>
 @endsection

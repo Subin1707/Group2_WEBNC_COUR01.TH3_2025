@@ -1,60 +1,41 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>📊 Admin Dashboard</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100 min-h-screen">
+@extends('layouts.admin')
 
-<div class="max-w-6xl mx-auto py-10">
+@section('title', 'Admin Dashboard')
 
-    <h1 class="text-3xl font-bold mb-6">📊 Admin Dashboard</h1>
-
-    <p class="mb-4">Xin chào, <strong>{{ Auth::user()->name }}</strong></p>
-
-    <!-- Navigation -->
-    <nav class="space-x-4 mb-8">
-        <a href="{{ route('admin.movies.index') }}" class="text-blue-600">🎞️ Quản lý Phim</a>
-        <a href="{{ route('admin.theaters.index') }}" class="text-blue-600">🏢 Quản lý Rạp</a>
-        <a href="{{ route('admin.rooms.index') }}" class="text-blue-600">📺 Quản lý Phòng</a>
-        <a href="{{ route('admin.showtimes.index') }}" class="text-blue-600">🕒 Lịch chiếu</a>
-        <a href="{{ route('admin.bookings.index') }}" class="text-blue-600">🎫 Booking</a>
-    </nav>
-
-    <!-- Dashboard Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold mb-2">🎞️ Movies</h2>
-            <p class="text-3xl font-bold">{{ $moviesCount }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold mb-2">🏢 Theaters</h2>
-            <p class="text-3xl font-bold">{{ $theatersCount }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold mb-2">📺 Rooms</h2>
-            <p class="text-3xl font-bold">{{ $roomsCount }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold mb-2">🕒 Showtimes</h2>
-            <p class="text-3xl font-bold">{{ $showtimesCount }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold mb-2">🎫 Bookings</h2>
-            <p class="text-3xl font-bold">{{ $bookingsCount }}</p>
+@section('content')
+<h1>📊 Dashboard</h1>
+<div class="row mt-4">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center p-3">
+            <h5>🎞️ Movies</h5>
+            <p class="fs-3">{{ $moviesCount }}</p>
         </div>
     </div>
-
-    <!-- Logout -->
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-            🚪 Logout
-        </button>
-    </form>
-
+    <div class="col-md-3 mb-3">
+        <div class="card text-center p-3">
+            <h5>🏢 Theaters</h5>
+            <p class="fs-3">{{ $theatersCount }}</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center p-3">
+            <h5>📺 Rooms</h5>
+            <p class="fs-3">{{ $roomsCount }}</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center p-3">
+            <h5>🕒 Showtimes</h5>
+            <p class="fs-3">{{ $showtimesCount }}</p>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+<div class="row mt-2">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center p-3">
+            <h5>🎫 Bookings</h5>
+            <p class="fs-3">{{ $bookingsCount }}</p>
+        </div>
+    </div>
+</div>
+@endsection
