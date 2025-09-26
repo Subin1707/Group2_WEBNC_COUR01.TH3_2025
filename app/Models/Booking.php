@@ -10,21 +10,16 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'showtime_id', 'seat_id', 'quantity', 'total_price', 'status'
+        'user_id', 'showtime_id', 'seat_number', 'quantity', 'total_price', 'status'
     ];
 
-    public function user()
+    public function customer()
     {
-        return $this->belongsTo(User::class); // admin hoặc customer guard tùy setup
+        return $this->belongsTo(User::class, 'user_id'); // dùng guard 'customer' trong controller
     }
 
     public function showtime()
     {
         return $this->belongsTo(Showtime::class);
-    }
-
-    public function seat()
-    {
-        return $this->belongsTo(Seat::class);
     }
 }

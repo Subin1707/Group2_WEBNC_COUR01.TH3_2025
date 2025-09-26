@@ -25,9 +25,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 
 /*
-|--------------------------------------------------------------------------
-| AUTH ROUTES
-|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------|
+| AUTH ROUTES                                                               |
+|--------------------------------------------------------------------------|
 */
 
 // Login
@@ -40,16 +40,13 @@ Route::get('/register', [CommonRegisterController::class, 'showRegistrationForm'
 Route::post('/register', [CommonRegisterController::class, 'register'])->name('register.submit');
 
 /*
-|--------------------------------------------------------------------------
-| ADMIN DASHBOARD + RESOURCE ROUTES
-|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------|
+| ADMIN DASHBOARD + RESOURCE ROUTES                                          |
+|--------------------------------------------------------------------------|
 */
 Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function () {
-
-    // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Resource routes
     Route::resources([
         'movies'    => MovieController::class,
         'theaters'  => TheaterController::class,
@@ -57,21 +54,21 @@ Route::middleware(['auth:web'])->prefix('admin')->name('admin.')->group(function
         'seats'     => SeatController::class,
         'showtimes' => ShowtimeController::class,
         'bookings'  => AdminBookingController::class,
-        'tickets'   => AdminTicketController::class, // <-- Route cho Tickets
+        'tickets'   => AdminTicketController::class,
     ]);
 });
 
 /*
-|--------------------------------------------------------------------------
-| CUSTOMER DASHBOARD + BOOKING + MOVIES
-|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------|
+| CUSTOMER DASHBOARD + BOOKING + MOVIES                                      |
+|--------------------------------------------------------------------------|
 */
 Route::middleware(['auth:customer'])->prefix('customer')->name('customer.')->group(function () {
-
     // Dashboard
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
     // Booking routes
+    Route::get('/booking', [CustomerBookingController::class, 'showBookingForm'])->name('booking.form'); // thêm
     Route::get('/booking/{showtime}', [CustomerBookingController::class, 'create'])->name('booking.create');
     Route::post('/booking', [CustomerBookingController::class, 'store'])->name('booking.store');
     Route::get('/history', [CustomerBookingController::class, 'history'])->name('history');

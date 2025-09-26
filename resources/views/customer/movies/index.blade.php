@@ -1,21 +1,23 @@
 @extends('layouts.app')
 
+@section('title', 'Danh sách phim')
+
 @section('content')
-    <h1>Danh sách phim</h1>
+<div class="container mt-4">
+    <h1>🎬 Danh sách phim</h1>
 
     @if($movies->count())
-        <ul>
+        <div class="list-group">
             @foreach($movies as $movie)
-                <li>
-                    <a href="{{ route('customer.movies.show', $movie->id) }}">
-                        {{ $movie->title }}
-                    </a>
-                </li>
+                <a href="{{ route('customer.movies.show', $movie->id) }}" class="list-group-item list-group-item-action">
+                    {{ $movie->title }}
+                </a>
             @endforeach
-        </ul>
+        </div>
     @else
         <p>Chưa có phim nào.</p>
     @endif
 
-    <a href="{{ route('customer.dashboard') }}">⬅️ Quay lại Dashboard</a>
+    <a href="{{ route('customer.dashboard') }}" class="btn btn-secondary mt-3">⬅️ Quay lại Dashboard</a>
+</div>
 @endsection

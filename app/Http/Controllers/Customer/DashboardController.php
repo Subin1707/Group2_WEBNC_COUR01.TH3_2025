@@ -11,17 +11,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $customer = Auth::guard('customer')->user();
+        $customerId = Auth::guard('customer')->id();
 
-        return view('customer.dashboard', [
-            'totalBookings' => Booking::where('customer_id', $customer->id)->count(),
-            'recentBookings' => Booking::with('showtime.movie', 'showtime.room')
-                                      ->where('customer_id', $customer->id)
-                                      ->latest()
-                                      ->take(5)
-                                      ->get(),
-            'totalMovies' => Movie::count(),
-        ]);
+        $totalBookings = Booking::where('user_id', $customerId)->count();
+
+        $recentBookings = Booking::with('showtime.movie', 'showtime.room', 'seat')
+                                 ->where('user_id', $customerId)
+                                 ->latest()
+                                 ->take(5)
+                                 ->get();
+
+        $totalMovies = Movie::count();
+
+        return view('customer.dashboard', compact('totalBookings', 'recentBookings', 'totalMovies'));
     }
 }
-

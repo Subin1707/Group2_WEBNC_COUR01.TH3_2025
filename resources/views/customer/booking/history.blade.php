@@ -1,29 +1,30 @@
 @extends('layouts.app')
 
+@section('title', 'Lịch sử đặt vé')
+
 @section('content')
-    <h1>Lịch sử đặt vé</h1>
+<div class="container">
+    <h1>📜 Lịch sử đặt vé</h1>
 
     @if($bookings->count())
-        <table class="w-full border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border border-gray-300 px-4 py-2">Phim</th>
-                    <th class="border border-gray-300 px-4 py-2">Rạp / Phòng</th>
-                    <th class="border border-gray-300 px-4 py-2">Ghế</th>
-                    <th class="border border-gray-300 px-4 py-2">Thời gian</th>
-                    <th class="border border-gray-300 px-4 py-2">Ngày đặt</th>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Phim</th>
+                    <th>Rạp / Phòng</th>
+                    <th>Ghế</th>
+                    <th>Thời gian</th>
+                    <th>Ngày đặt</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($bookings as $booking)
                     <tr>
-                        <td class="border border-gray-300 px-4 py-2">{{ $booking->showtime->movie->title }}</td>
-                        <td class="border border-gray-300 px-4 py-2">
-                            {{ $booking->showtime->room->theater->name ?? 'Chưa xác định' }} / {{ $booking->showtime->room->name }}
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $booking->seat_number }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $booking->showtime->start_time }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $booking->created_at }}</td>
+                        <td>{{ $booking->showtime->movie->title }}</td>
+                        <td>{{ $booking->showtime->room->theater->name ?? 'Chưa xác định' }} / {{ $booking->showtime->room->name }}</td>
+                        <td>{{ $booking->seat_number ?? $booking->seat_id }}</td>
+                        <td>{{ $booking->showtime->start_time }}</td>
+                        <td>{{ $booking->created_at->format('d-m-Y H:i') }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -32,5 +33,6 @@
         <p>Chưa có booking nào.</p>
     @endif
 
-    <a href="{{ route('customer.dashboard') }}" class="text-blue-600 mt-4 inline-block">← Quay lại Dashboard</a>
+    <a href="{{ route('customer.dashboard') }}" class="btn btn-secondary mt-3">← Quay lại Dashboard</a>
+</div>
 @endsection
