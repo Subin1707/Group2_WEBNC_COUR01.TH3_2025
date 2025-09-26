@@ -15,7 +15,7 @@ class Booking extends Model
 
     public function customer()
     {
-        return $this->belongsTo(User::class, 'user_id'); // dùng guard 'customer' trong controller
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function showtime()

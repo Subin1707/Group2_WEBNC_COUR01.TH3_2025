@@ -38,7 +38,7 @@
                 <div class="d-flex flex-wrap gap-2">
                     @foreach(range(1, $showtime->room->total_seats ?? 50) as $seat)
                         <label class="btn btn-outline-primary">
-                            <input type="checkbox" name="seats[]" value="{{ $seat }}" class="d-none peer">
+                            <input type="checkbox" name="seats[]" value="{{ $seat }}" class="d-none">
                             {{ $seat }}
                         </label>
                     @endforeach

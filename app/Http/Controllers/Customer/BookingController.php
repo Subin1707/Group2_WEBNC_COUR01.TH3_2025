@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+    // Hiển thị danh sách showtime (trang trung gian)
+    public function showBookingForm()
+    {
+        $showtimes = Showtime::with('movie', 'room.theater')->get();
+        return view('customer.booking.form', compact('showtimes'));
+    }
+
     // Hiển thị form đặt vé chi tiết
     public function create($showtimeId)
     {

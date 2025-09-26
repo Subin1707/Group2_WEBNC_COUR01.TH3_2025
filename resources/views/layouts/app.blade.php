@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard')</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
     <style>
         .wrapper { display: flex; min-height: 100vh; }
         .sidebar { width: 250px; background: #f8f9fa; padding: 20px; }
@@ -40,15 +37,12 @@
                 <a href="{{ route('admin.theaters.index') }}">🏢 Quản lý rạp</a>
                 <a href="{{ route('admin.rooms.index') }}">📺 Quản lý phòng</a>
                 <a href="{{ route('admin.showtimes.index') }}">🕒 Quản lý suất chiếu</a>
-                <a href="{{ route('admin.tickets.index') }}">🎫 Quản lý vé</a>
-                <a href="{{ route('admin.customers.index') }}">👥 Quản lý khách hàng</a>
             @elseif(Auth::guard('customer')->check())
                 <a href="{{ route('customer.dashboard') }}">🏠 Trang khách hàng</a>
                 <a href="{{ route('customer.movies.index') }}">🎞️ Chọn phim & Đặt vé</a>
                 <a href="{{ route('customer.history') }}">📜 Lịch sử</a>
             @endif
 
-            <!-- Logout -->
             <div class="logout mt-3">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -64,7 +58,6 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

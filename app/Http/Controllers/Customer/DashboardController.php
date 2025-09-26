@@ -15,7 +15,7 @@ class DashboardController extends Controller
 
         $totalBookings = Booking::where('user_id', $customerId)->count();
 
-        $recentBookings = Booking::with('showtime.movie', 'showtime.room', 'seat')
+        $recentBookings = Booking::with('showtime.movie', 'showtime.room')
                                  ->where('user_id', $customerId)
                                  ->latest()
                                  ->take(5)
