@@ -7,7 +7,8 @@ use App\Models\Booking;
 use App\Models\Showtime;
 use Illuminate\Support\Facades\Auth;
 
-class BookingController extends Controller
+
+class CustomerBookingController extends Controller
 {
     public function create($showtimeId)
     {
