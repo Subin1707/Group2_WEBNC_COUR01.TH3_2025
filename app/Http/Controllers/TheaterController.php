@@ -10,7 +10,7 @@ class TheaterController extends Controller
     public function index()
     {
         $theaters = Theater::all();
-        return view('theaters.index', compact('theaters'));
+        return view('admin.theaters.index', compact('theaters'));
     }
 
     public function create()

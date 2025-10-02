@@ -12,7 +12,7 @@ class ShowtimeController extends Controller
     public function index()
     {
         $showtimes = Showtime::with(['movie', 'room'])->get();
-        return view('showtimes.index', compact('showtimes'));
+        return view('admin.showtimes.index', compact('showtimes'));
     }
 
     public function create()

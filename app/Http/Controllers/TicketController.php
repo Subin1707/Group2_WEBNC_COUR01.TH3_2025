@@ -22,7 +22,7 @@ class TicketController extends Controller
 
         $tickets = $query->orderBy('id', 'desc')->paginate(10);
 
-        return view('tickets.index', compact('tickets'));
+        return view('admin.tickets.index', compact('tickets'));
 
         
     }

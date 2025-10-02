@@ -11,7 +11,7 @@ class RoomController extends Controller
     public function index()
     {
         $rooms = Room::with('theater')->get();
-        return view('rooms.index', compact('rooms'));
+        return view('admin.rooms.index', compact('rooms'));
     }
 
     public function create()

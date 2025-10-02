@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin Demo',
             'email' => 'admin@test.com',
             'password' => Hash::make('123456'),
+            'role' => 'admin',
         ]);
 
         // Customer test
